@@ -45,12 +45,12 @@
         "eslint-plugin-prettier": "^4.0.0",
         "lite-youtube-embed": "^0.2.0",
         "markdownlint-cli2": "^0.4.0",
-        "prettier": "^2.6.1"
+        "prettier": "^2.6.2"
     },
     "engines": {
         "node": ">= 16"
     },
     "dependencies": {
-        "netlify-cli": "^9.13.6"
+        "netlify-cli": "^9.16.1"
     }
 }
