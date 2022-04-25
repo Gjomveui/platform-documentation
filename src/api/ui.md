@@ -42,6 +42,7 @@ The UI namespace contains a set of class functions allowing you to get informati
 | `UI.IsVoiceChatWidgetVisible()` | `boolean` | Returns whether the voice chat widget is currently visible. Note that this may return `true` when the voice chat widget is not currently displaying anything on the screen. | Client-Only |
 | `UI.SetVoiceChatWidgetVisible(boolean isVisible)` | `None` | Sets whether the voice chat widget is currently visible. | Client-Only |
 | `UI.FindControlAtPosition(Vector2 screenPosition)` | [`UIControl`](uicontrol.md) | Looks for a hittable UI control at the given screen position. Returns the top-most control if found. Returns `nil` if no hittable control was found at the specified position. | Client-Only |
+| `UI.GetSafeArea()` | [`Rectangle`](rectangle.md) | Returns a rectangle in screen space indicating an area on screen that is not obscured by elements such as the notch on a mobile phone. | Client-Only |
 
 ## Events
 
@@ -274,6 +275,40 @@ Input.actionPressedEvent:Connect(OnActionPressed)
 ```
 
 See also: [Input.GetCursorPosition](input.md) | [HitResult.other](hitresult.md) | [Task.Wait](task.md)
+
+---
+
+Example using:
+
+### `GetSafeArea`
+
+Some devices (such as mobile phones) may have regions at the edges of their screen where interactive elements should not be placed. While this can be handled automatically by the `UI Container` object, some advanced projects may need to incorporate these limits into their logic. In this example we measure the screen's safe space (which excludes the restricted areas) and compare that to the screen size. With this knowledge, we can figure out what side of the screen has such "unsafe" zones. Perhaps it could be both sides, or neither side. This can be simulated in preview mode with options provided in the editor (next to play button).
+
+```lua
+-- Rectangular bounds of the screen's safe area
+local rectangle = UI.GetSafeArea()
+print(tostring(rectangle))
+
+-- Total screen size
+local screenSize = UI.GetScreenSize()
+print(tostring(screenSize))
+
+-- Compare the two to figure out if there are "unsafe" areas
+local notchWidth = nil
+if rectangle.left > 0 then
+    notchWidth = rectangle.left
+    print("Notch area of " .. notchWidth .. " on LEFT side.")
+end
+if rectangle.right < screenSize.x then
+    notchWidth = screenSize.x - rectangle.right
+    print("Notch area of " .. notchWidth .. " on RIGHT side.")
+end
+if not notchWidth then
+    print("The whole screen is safe!")
+end
+```
+
+See also: [UIContainer.useSafeArea](uicontainer.md) | [Rectangle.left](rectangle.md) | [Vector2.x](vector2.md)
 
 ---
 

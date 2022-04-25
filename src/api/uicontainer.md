@@ -16,6 +16,7 @@ A UIContainer is a type of UIControl. All other UI elements must be a descendant
 | -------- | ----------- | ----------- | ---- |
 | `opacity` | `number` | Controls the opacity of the container's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent. | Read-Write |
 | `cylinderArcAngle` | `number` | When the container is rendered in 3D space, this adjusts the curvature of the canvas in degrees. Changing this value will force a redraw. | Read-Write |
+| `useSafeArea` | `boolean` | When `true`, the size and position of the container is inset to avoid overlapping with a device's display elements, such as a mobile phone's notch. When `false`, the container is the same size and shape as the device's display regardless of a device's display features. This property has no effect on containers rendered in 3D space. | Read-Write |
 
 ## Functions
 
@@ -244,6 +245,40 @@ end)
 ```
 
 See also: [Events.Broadcast](events.md) | [CoreMath.Clamp](coremath.md)
+
+---
+
+Example using:
+
+### `useSafeArea`
+
+Some devices (such as mobile phones) may have regions at the edges of their screen where interactive elements should not be placed. While this can be handled automatically by the `UI Container` object, some advanced projects may need to incorporate these limits into their logic. In this example we figure out if the container cares about using the safe area and, if so, where is the "unsafe" area and how wide is it. This can be simulated in preview mode with options provided in the editor (next to play button).
+
+```lua
+local UI_CONTAINER = script.parent
+local notchWidth = nil
+
+if UI_CONTAINER.useSafeArea then
+    local safeArea = UI.GetSafeArea()
+    local screenSize = UI.GetScreenSize()
+    
+    if safeArea.left > 0 then
+        notchWidth = safeArea.left
+        print("UI Container is using safe zone.")
+        print("There is a notch of " .. notchWidth .. " on the LEFT side.")
+    end
+    if safeArea.right < screenSize.x then
+        notchWidth = screenSize.x - safeArea.right
+        print("UI is using safe zone.")
+        print("There is a notch of " .. notchWidth .. " on the RIGHT side.")
+    end
+end
+if not notchWidth then
+    print("The whole screen is safe for UI =)")
+end
+```
+
+See also: [UI.GetSafeArea](ui.md) | [Rectangle.left](rectangle.md)
 
 ---
 
